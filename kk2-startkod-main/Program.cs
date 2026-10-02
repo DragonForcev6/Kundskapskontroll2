@@ -13,21 +13,36 @@ while (true)
     Console.WriteLine("5. Avsluta");
     Console.Write("Välj: ");
 
-    int choice = int.Parse(Console.ReadLine());
-
-    if (choice == 1)
+    if (!int.TryParse(Console.ReadLine(), out int choice)) //Sätter in hella Choice i en if satts och TryPars så att
+    // inte programet krascharom någon skriver in en bokstav eller siffra.
+    {
+        if (choice == 1)
     {
         Console.Write("Namn: ");
         string name = Console.ReadLine();
         Console.Write("Pris: ");
-        int price = int.Parse(Console.ReadLine());
-        list.Add(new Item(name, price));
+        if (int.TryParse(Console.ReadLine(), out int price)) //if satts med TryParse så att inte programmet kraschar 
+        {
+            list.Add(new Item(name, price)); 
+        }
+        else
+            {
+               Console.WriteLine("Nu skrev du nog fel, försök skriva med siffror.");
+            }
+        
     }
     else if (choice == 2)
     {
         Console.Write("Nummer: ");
-        int number = int.Parse(Console.ReadLine());
-        list.RemoveAt(number);
+        if (int.TryParse(Console.ReadLine(), out int number)) //if med TryPars samma som ovan
+            {
+                list.RemoveAt(number);
+            }
+            else
+            {
+                Console.WriteLine("Nu blev det fel, försök att skriva med siffror.");
+            }
+        
     }
     else if (choice == 3)
     {
@@ -51,5 +66,7 @@ while (true)
     else if (choice == 5)
     {
         break;
+    }
+
     }
 }

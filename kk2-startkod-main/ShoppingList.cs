@@ -25,7 +25,7 @@ class ShoppingList
     {
         int sum = 0;
 
-        for (int i = 1; i < items.Count; i++)
+        for (int i = 1; i < items.Count; i++) //Det här borde vara 0 annars blir inte första varan i index plockad
         {
             sum += items[i].Price;
         }
@@ -69,13 +69,13 @@ class ShoppingList
 
         try
         {
-            File.WriteAllText(path, string.Join("\r\n", lines) + "\r\n");
+            File.WriteAllText(path, string.Join("\r\n", lines) + "\r\n"); // Kan bli ett problem med \r dom fastnar vid items
         }
         catch
         {
         }
 
-        Console.WriteLine("Listan är sparad.");
+        Console.WriteLine("Listan är sparad."); // Skriver ut att listan är sparad även om den kanske inte är det
     }
 
     // Reads the file back into the list.
