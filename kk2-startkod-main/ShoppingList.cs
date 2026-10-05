@@ -15,7 +15,7 @@ class ShoppingList
     }
 
     // Removes the item the user sees as number 1, 2, 3 ...
-    public void RemoveAt(int number)
+    public void RemoveAt(int number) 
     {
         items.RemoveAt(number - 1);
     }
@@ -79,15 +79,29 @@ class ShoppingList
     }
 
     // Reads the file back into the list.
-    public void Load()
+    public void Load() 
     {
-        string text = File.ReadAllText(path);
-        string[] lines = text.Split('\n');
-
-        foreach (string line in lines)
+        if (!File.Exists(path)) //Kollar om filen finns, om den inte finns händer 
+        //inget men om den finns hoppar den vidare i koden.
         {
-            string[] parts = line.Split(';');
-            items.Add(new Item(parts[1], int.Parse(parts[0])));
+            return;
         }
+        foreach (string line in File.ReadAllLines(path)) //Läser hela filen vid path o retunerar en string arreyer
+        //där varje element är en rad från filen. Foreachloopar arreyen en rad i taget o sparar den i line.
+        {
+            if (string.IsNullOrWhiteSpace(line)) // Om raden skulle vara null eller ha blanksteg hoppar den över raden.
+            {
+                continue; 
+            }
+            string[] parts = line.Split(';'); //Splitar linjerna med ett semikolon ;
+
+             items.Add(new Item(parts[1], int.Parse(parts[0])));
+        }
+       
+           
+       //
+
+        
+       
     }
 }
