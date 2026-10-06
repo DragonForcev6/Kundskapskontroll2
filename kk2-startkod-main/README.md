@@ -1,3 +1,5 @@
+(Skriv om o Markdown!)
+
 Vad jag vill ändra i Program.cs
 int choice = int.Parse(Console.ReadLine()); 
 Får programmet att krascha om man inte använder siffror
@@ -14,7 +16,10 @@ File.WriteAllText(path, string.Join("\r\n", lines) + "\r\n"); i save använder \
 Load bara använder \n det medför att \r kommer hänga med vissa variablar ibland.
 
 Fick hjälp utav Claude med Load, jag tänkte att programet borde kolla att filen finns redan innan den 
-försöker ladda upp den vilket, läsa allt som finns där eller inte finns där om det finns null eller blanksteg.
+försöker ladda upp den, läsa allt som finns där eller inte finns där om det finns null eller blanksteg.
+Och Claude mena på att det finns kod som löser alla tre problemen. Så med File.Exists löste även kraschen som uppstod 
+när filen saknades. IsNullOrWhiteSpace hoppar över tomma rader, jag såg att File.ReadAllText inte går att använda med arrey 
+så bytte till File.ReadAllLine den hanterar oxå \n o \r\n så \r inte hamnar i varans namn.
 
 
 så det har jag ändrat under Load.
