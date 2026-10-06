@@ -69,10 +69,11 @@ class ShoppingList
 
         try
         {
-            File.WriteAllText(path, string.Join("\r\n", lines) + "\r\n"); // Kan bli ett problem med \r dom fastnar vid items
+            File.WriteAllText(path, string.Join("\r\n", lines) + "\r\n"); 
         }
         catch
         {
+            
         }
 
         Console.WriteLine("Listan är sparad."); // Skriver ut att listan är sparad även om den kanske inte är det
