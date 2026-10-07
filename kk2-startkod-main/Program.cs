@@ -1,4 +1,4 @@
-ShoppingList list = new ShoppingList("items.txt");
+ShoppingList list = new ShoppingList("manstrale.txt");
 list.Load();
 
 while (true)
@@ -11,10 +11,15 @@ while (true)
     Console.WriteLine("3. Spara");
     Console.WriteLine("4. Sök vara");
     Console.WriteLine("5. Avsluta");
-    Console.Write("Välj: ");
+    Console.Write("Välj:");
 
     if (!int.TryParse(Console.ReadLine(), out int choice)) //Sätter in hella Choice i en if satts och TryPars så att
     // inte programet krascharom någon skriver in en bokstav eller tecken.
+    {
+        Console.WriteLine("Skriv en siffra mellan 1-5."); //Skriver ut felmeddelande om användaren 
+        continue; 
+    }
+ 
     {
         if (choice == 1)
     {
@@ -28,34 +33,34 @@ while (true)
         }
 
         Console.Write("Pris: ");
-        if (!int.TryParse(Console.ReadLine(), out int price) && price >= 0) //if satts med TryParse så att inte programmet kraschar 11
+        if (!int.TryParse(Console.ReadLine(), out int price) || price < 0) //if satts med TryParse så att inte programmet kraschar, 
+            //om användaren skriver in något annat än siffror. || price < 0 kollar att priset inte är negativt.
         {
-            list.Add(new Item(name, price)); 
-            Console.WriteLine($"Lade till {name} för {price} kr i ShoppingListan."); //Skriver ut vad som lagts till i listan.
-            
+            Console.WriteLine("Varan sparades inte: du måste skriva ett giltigt pris.");
+            continue;
         }
-        else
-            {
-               Console.WriteLine("Nu skrev du nog fel, försök skriva med siffror.");
-            }
-        
+
+        list.Add(new Item(name, price));
+        Console.WriteLine($"Lade till {name} för {price} kr i ShoppingListan."); //Skriver ut vad som lagts till i listan.
     }
     else if (choice == 2)
     {
         Console.Write("Nummer: ");
-        if (int.TryParse(Console.ReadLine(), out int number)) //if med TryPars samma som ovan
+        if (int.TryParse(Console.ReadLine(), out int number)) //if med TryPars, tar bort varan som användaren skriver in med siffror.
             {
                 list.RemoveAt(number);
             }
             else
             {
-                Console.WriteLine("Nu blev det fel, försök att skriva med siffror.");
+                Console.WriteLine("Nu blev det fel, försök att skriva med siffror."); //skriver ut 
+                //felmeddelande om användaren skriver något annat än siffror.
             }
         
     }
     else if (choice == 3)
     {
         list.Save();
+        Console.WriteLine("ShoppingListan är sparad."); //Skriver ut att listan är sparad. ny
     }
     else if (choice == 4)
     {
