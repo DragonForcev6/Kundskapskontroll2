@@ -1,4 +1,4 @@
-Vad jag vill ändra i Program.cs
+ Program.cs
 int choice = int.Parse(Console.ReadLine()); 
 Får programmet att krascha om man inte använder siffror
 Sätter hela choice i en if satts och använder TryParse istället för Pars som inte kraschar programet
@@ -9,7 +9,7 @@ skriver siffror,om bokstäver eller symboler används kommer det upp ett fel med
 Claude sa att jag skulle lägga till <ItemGroup> i csproj för att filen items.txt ska ingå i projektet o 
 bli kopierad till byggmappen (bin\Debug\net10.0).
 
-Vad jag vill ändra i ShoppingList.cs
+ShoppingList.cs
 File.WriteAllText(path, string.Join("\r\n", lines) + "\r\n"); i save använder \r\n medan 
 Load bara använder \n det medför att \r kommer hänga med vissa variablar ibland.
 
@@ -19,6 +19,9 @@ försöker ladda upp den vilket, läsa allt som finns där eller inte finns där
 
 så det har jag ändrat under Load.
 
+Item.cs
+Får ett kopileringsfel "Inconsistent accessibility" (CS0050/CS0051) enligt Claude är det för att Find retunerar en Item
+Claudes förslag är att jag skriver public class Item.
 
 
  
