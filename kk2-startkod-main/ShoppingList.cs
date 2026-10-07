@@ -25,7 +25,7 @@ class ShoppingList
     {
         int sum = 0;
 
-        for (int i = 1; i < items.Count; i++) //Det här borde vara 0 annars blir inte första varan i index plockad
+        for (int i = 0; i < items.Count; i++) //Det här borde vara 0 annars blir inte första varan i index plockad
         {
             sum += items[i].Price;
         }

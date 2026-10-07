@@ -14,16 +14,25 @@ while (true)
     Console.Write("Välj: ");
 
     if (!int.TryParse(Console.ReadLine(), out int choice)) //Sätter in hella Choice i en if satts och TryPars så att
-    // inte programet krascharom någon skriver in en bokstav eller siffra.
+    // inte programet krascharom någon skriver in en bokstav eller tecken.
     {
         if (choice == 1)
     {
         Console.Write("Namn: ");
         string name = Console.ReadLine();
+
+         if (string.IsNullOrWhiteSpace(name)) // Kollar att användaren skriver in ett namn annars visas ett felmedelande.
+        {
+            Console.WriteLine("Varan sparades inte: du måste skriva ett namn.");
+            continue;
+        }
+
         Console.Write("Pris: ");
-        if (int.TryParse(Console.ReadLine(), out int price)) //if satts med TryParse så att inte programmet kraschar 
+        if (!int.TryParse(Console.ReadLine(), out int price) && price >= 0) //if satts med TryParse så att inte programmet kraschar 11
         {
             list.Add(new Item(name, price)); 
+            Console.WriteLine($"Lade till {name} för {price} kr i ShoppingListan."); //Skriver ut vad som lagts till i listan.
+            
         }
         else
             {
