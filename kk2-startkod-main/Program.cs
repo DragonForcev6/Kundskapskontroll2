@@ -46,7 +46,7 @@ while (true)
     else if (choice == 2)
     {
         Console.Write("Nummer: ");
-        if (int.TryParse(Console.ReadLine(), out int number)) //if med TryPars, tar bort varan som användaren skriver in med siffror.
+        if (int.TryParse(Console.ReadLine(), out int number)) //Kollar att användaren skrivit siffror.
             {
 
                 if (list.RemoveAt(number)) //När varan tas bort får användaren veta det.
