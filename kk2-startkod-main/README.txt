@@ -17,7 +17,9 @@ skriver siffror,om bokstäver eller symboler används kommer det upp ett fel med
  in giltigt pris o inget negativt pris eller noll. Annars får användaren ett felmeddelande.
  list.Add(new Item(name, price)); La till så användaren får upp ett meddelande när varan läggs till.
  Choich 2: Lagt i en if sats där användaren får ett felmeddelande om den inte skriver med sifforor.
+ Och när varan tas bort får användaren ett meddelande att varan tagits bort.
  Choice 3: Användaren får ett medelande att Shoppinglistan är sparad.
+
 
 Claude sa att jag skulle lägga till <ItemGroup> i csproj för att filen items.txt ska ingå i projektet o 
 bli kopierad till byggmappen (bin\Debug\net10.0).

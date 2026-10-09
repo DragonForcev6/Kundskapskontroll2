@@ -48,7 +48,11 @@ while (true)
         Console.Write("Nummer: ");
         if (int.TryParse(Console.ReadLine(), out int number)) //if med TryPars, tar bort varan som användaren skriver in med siffror.
             {
-                list.RemoveAt(number);
+
+                if (list.RemoveAt(number)) //När varan tas bort får användaren veta det.
+                {
+                    Console.WriteLine("Varan togs bort.");
+                }
             }
             else
             {
