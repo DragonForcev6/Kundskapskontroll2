@@ -133,10 +133,22 @@ public class ShoppingList
                 continue; 
             }
             string[] parts = line.Split(';'); //Splitar linjerna med ett semikolon ;
+            
+            if (parts.Length < 2 || !int.TryParse(parts[0], out int price)) // Hoppar över raden om semikolon
+            // saknas eller om priset inte är en siffra, annars kraschar programmet.
+            
+           {
+                Console.WriteLine($"En rad i filen hoppades över: \"{line}\" har fel format.");
+                continue;
+            }
+
             try
             {
-             items.Add(new Item(parts[1], int.Parse(parts[0])));
-            }
+                if (!Add(new Item(parts[1], price))) // Använder Add så att taket gäller även när filen läses in.
+                {
+                    Console.WriteLine($"{parts[1]} lades inte till: max taket på {MaxTotal} kr är nått.");
+                }
+            }    
             catch (ArgumentException ex)
             {
                 Console.WriteLine($"En rad i filen hoppades över: {ex.Message}");
