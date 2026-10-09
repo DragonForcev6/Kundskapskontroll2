@@ -1,68 +1,132 @@
+# Inköpslistan
 
+## Del 1 – Felrapport
 
-Vad jag vill ändra i Program.cs
+### Fel 1: Programmet kraschar när items.txt saknas
+**Vad hände:** När jag döpte om items.txt o startade programmet kraschade det direkt.
+**Varför:** Load försökte läsa filen med File.ReadAllText utan att kolla om filen fanns, då kommer en FileNotFoundException.
+**Lösning:** Jag tänkte att programmet borde kolla att filen finns innan den försöker läsa den. Så jag la till `if 
+(!File.Exists(path)) return;` först i Load. Finns inte filen händer inget o programmet startar med en tom lista.
 
-int choice = int.Parse(Console.ReadLine()); 
-Får programmet att krascha om man inte använder siffror
-Sätter hela choice i en if satts och använder TryParse istället för Pars som inte kraschar programet
-om man skriver bokstäver eller symboler.
-I Choice 1 o Choice 2 sätter Sätter TryParse istället för en Pars i en if sats som kollar så användaren 
-skriver siffror,om bokstäver eller symboler används kommer det upp ett fel meddelande.
- if (!int.TryParse(Console.ReadLine(), out int choice)) om användaren skriver siffror eller symboler 
- fångas det upp o de får ett felmeddelande.
- I Choice 1: Lagt till if (string.IsNullOrWhiteSpace(name)) för att fånga upp null, 
- tom sträng "" o blanksteg eller andra osynliga tecken som tabb o radbrytning "  ", 
- vid dessa tillfällen fångas de upp med ett felmeddelande.
- if (!int.TryParse(Console.ReadLine(), out int price) || price <= 0) Kontrollerar att användaren skriver 
- in giltigt pris o inget negativt pris eller noll. Annars får användaren ett felmeddelande.
- list.Add(new Item(name, price)); La till så användaren får upp ett meddelande när varan läggs till.
- Choich 2: Lagt i en if sats där användaren får ett felmeddelande om den inte skriver med sifforor.
- Och när varan tas bort får användaren ett meddelande att varan tagits bort.
- Choice 3: Användaren får ett medelande att Shoppinglistan är sparad.
+### Fel 2: Programmet kraschar på en tom rad i filen
+**Vad hände:** Programmet kraschade när det startade fast items.txt fanns, med IndexOutOfRangeException.
+**Varför:** Save skriver en radbrytning efter sista raden, så när Load delade upp texten blev sista raden tom. 
+En tom rad har inget semikolon så parts får bara en del o parts[1] finns inte.
+**Lösning:** Jag la till `if (string.IsNullOrWhiteSpace(line)) continue;` i Load. Om raden är tom eller bara har 
+blanksteg hoppar den över raden.
 
+### Fel 3: Programmet kraschar om man skriver bokstäver i stället för siffror
+**Vad hände:** Skrev man bokstäver eller symboler i menyn, i priset eller i numret kraschade programmet.
+**Varför:** int.Parse kraschar programmet om det man skriver inte är ett tal.
+**Lösning:** Jag satte choice, price o number i if-satser o bytte Parse mot TryParse. TryParse kraschar inte, den ger 
+false om det inte gick o då får användaren ett felmeddelande. I choice 1 la jag också till `string.IsNullOrWhiteSpace(name)` 
+som fångar upp tomt namn o blanksteg, o `price <= 0` så att man inte kan skriva in noll eller negativt pris.
 
-Claude sa att jag skulle lägga till <ItemGroup> i csproj för att filen items.txt ska ingå i projektet o 
-bli kopierad till byggmappen (bin\Debug\net10.0).
+### Fel 4: Programmet kraschar när man tar bort en vara som inte finns
+**Vad hände:** RemoveAt tog emot vilken siffra som helst. Skrev man t.ex. 0 eller 99 kraschade programmet.
+**Varför:** Numret skickades direkt vidare till listan utan att någon kollade att det fanns en vara med det numret.
+**Lösning:** Jag ändrade RemoveAt så den returnerar bool. Först kollar den om listan är tom, sen kollar den att numret 
+är mellan 1 o antal varor i listan (`number < 1 || number > items.Count`). Är det fel får användaren ett felmeddelande 
+o den returnerar false. När varan tas bort får användaren ett meddelande att varan tagits bort.
 
-ShoppingList.cs
-readonly List<Item> items = new List<Item>(); 
-readonly string path;
-Hindra framtida misstag så man inte råkar skriva över items eller path, 
-ändrar till public så Program kan nå båda
+### Fel 5: Totalsumman blir fel
+**Vad hände:** När jag räknade efter för hand stämde inte totalsumman, den var för låg.
+**Varför:** Loopen i Total() började på i = 1, men listan börjar på index 0. Så första varan blev aldrig medräknad.
+**Lösning:** Jag ändrade så loopen börjar på i = 0.
 
-File.WriteAllText(path, string.Join("\r\n", lines) + "\r\n"); i save använder \r\n medan 
-Load bara använder \n det medför att \r kommer hänga med vissa variablar ibland.
-string text = File.ReadAllText(path);
-string[] lines = text.Split('\n'); Denna koden gör att problemet uppstår o då varunamnat blir 
-Mjölk\r kan inte varan Mjölk hittas.
+### Fel 6: Save döljer att något gick fel
+**Vad hände:** Programmet skrev ut att listan var sparad oavsett om den blev sparad eller inte.
+**Varför:** catch var tom så om något gick fel fick användaren inte veta det, o meddelandet "Listan 
+är sparad" stod efter try/catch så det kom alltid ut.
+**Lösning:** Jag ändrade Save så den returnerar bool. Koden som kan misslyckas ligger i try, o om 
+något går fel hoppar programmet till rätt catch. Jag fångar UnauthorizedAccessException 
+(filen är skrivskyddad eller man saknar behörighet), DirectoryNotFoundException (mappen finns inte) 
+o IOException (t.ex. filen används i ett annat program eller disken är full). Varje catch skriver ut 
+ett felmeddelande o returnerar false. Meddelandet att listan är sparad kommer bara ut om allt gick bra.
 
-Jag fick lite tips ifrån Claud att ändra i Load.
-jag tänkte att programet borde kolla att filen finns redan innan den 
-försöker ladda upp den, läsa allt som finns där eller inte finns där om det finns null eller blanksteg.
-Och Claude mena på att det finns kod som löser alla tre problemen. Så med File.Exists löste även 
-kraschen som uppstod när filen saknades. IsNullOrWhiteSpace hoppar över tomma rader, jag såg att File.
-ReadAllText inte går att använda med arrey så bytte till File.ReadAllLine den hanterar oxå \n o \r\n så \r 
-inte hamnar i varans namn.
+**Ordningen på catch:** Koden läser catch uppifrån o ner o tar den första som passar. 
+DirectoryNotFoundException ärver från IOException, så om IOException står först passar den alltid o 
+blocket under kommer aldrig i tur. Jag testade att flytta IOException först o då blev 
+DirectoryNotFoundException rödmarkerad med ett meddelande om att den övre redan fångade allt. 
+Så den specifika måste stå före den allmänna.
 
-Save sparar inte men just nu skriver ut att den sparas oavsett.
-Så ändrar Save till en public boolian.Frågat Claud som föreslog att lägga 
-allt i en try loop där koden som kan misslyckas, om något går fel hoppar programet till
-rätt catch. File.WriteAllLines(path, lines); skriver alla raderi filen, 
-sparar filen om den inte finns o skriver över den om den finns.
-meddelandet "Listan sparades" kommer bara ut om allt gick bra.
-Ordningen mellan IOException o DirectoryNotFoundException är viktig i koden om man skriver den som <-- 
-jag skrev nu kommer inte koden att läsas uppifrån o ner o ta det som passar bäst, står IOException först 
-kommer den alltid att passa bäst o det spesifika blocket under kommer aldrig i tur.
+### Extra: Sökningen hittade inte varor som fanns i listan
+**Varför:** Save använde \r\n men Load delade bara på \n. Då hängde \r med i varans namn, t.ex. blev 
+det Mjölk\r o då kunde inte Mjölk hittas när man sökte.
+**Lösning:** Jag bytte till File.ReadAllLines i Load. ReadAllText ger hela filen som en enda sträng, 
+men ReadAllLines ger en array där varje rad är ett eget element, o den hanterar både \n o \r\n så \r inte 
+hamnar i varans namn. I Save använder jag File.WriteAllLines.
 
-RemovAt tar emot vilken siffra som helst o ger inget felmeddelande när användaren anger ett nummer som 
-inte finns i listen.
-Har ändrat så RemoveAt har koll på om listan är tom eller användaren knappar in nummer som är stämmer 
-överens med antal varor i listan.
- 
+## Del 2 – Designval
 
-Item.cs
-Får ett kopileringsfel "Inconsistent accessibility" (CS0050/CS0051) enligt Claude är det för att 
-Find retunerar en Item Claudes förslag är att jag skriver public class Item.
+### Hur Add säger nej när taket spräcks
+Jag la till MaxTotal = 5000 i ShoppingList o ändrade Add så den returnerar bool. Add kollar om 
+`Total() + item.Price > MaxTotal`. Blir det över taket läggs varan inte till o Add returnerar false, 
+annars läggs den till o returnerar true. Om totalen blir precis 5000 kr är det okej.
 
- 
+**Varför jag valde bool:** Att man försöker lägga till något som blir för dyrt är något som kan hända 
+när man använder programmet helt normalt, det är inget fel i programmet. Det är som i bankexemplet när 
+saldot inte räcker. Jag valde också bool för att det stämmer med hur RemoveAt o Save fungerar. Program.cs 
+behöver bara en if-sats: blir det true skrivs det ut att varan lades till, blir det false får användaren 
+ett felmeddelande att max taket är nått.
 
+### Varför Item kastar undantag
+Item kastar ArgumentException om namnet är tomt eller priset är negativt. En konstruktor kan inte 
+returnera false så därför kastar den ett undantag. Program.cs kollar redan namn o pris innan varan 
+skapas, men Load skapar varor direkt från filen utan att kolla. Därför la jag try/catch med 
+ArgumentException i Load, så om någon rad i filen är fel hoppas den över med ett meddelande i stället 
+för att programmet kraschar. Jag testade med raden -5;Test i filen.
+
+## Andra ändringar
+- items o path är readonly. Det gör att man inte kan råka byta ut listan eller path mot något 
+annat efter konstruktorn, men man kan fortfarande lägga till o ta bort varor i listan.
+- ShoppingList o Item är public. När jag gjorde ShoppingList public fick jag kompileringsfelet 
+"Inconsistent accessibility" eftersom Find returnerar ett Item, då måste Item också vara public.
+- I csproj kopieras items.txt till bin\Debug\net10.0, o det är den filen programmet läser 
+o sparar i.
+
+## Klassdiagram
+
+```
++------------------------------+
+| Program                      |
++------------------------------+
+| menyloop (val 1–5)           |
++------------------------------+
+               |
+               | använder
+               v
++------------------------------+
+| ShoppingList                 |
++------------------------------+
+| + MaxTotal : int = 5000      |
+| - items : List<Item>         |
+| - path : string              |
++------------------------------+
+| + Add(Item) : bool           |
+| + RemoveAt(int) : bool       |
+| + Total() : int              |
+| + Find(string) : Item        |
+| + Print() : void             |
+| + Save() : bool              |
+| + Load() : void              |
++------------------------------+
+               |
+               | 1 har 0..*
+               v
++------------------------------+
+| Item                         |
++------------------------------+
+| + Name : string              |
+| + Price : int                |
++------------------------------+
+| + Item(string, int)          |
+|   kastar ArgumentException   |
+| + ToString() : string        |
++------------------------------+
+```
+
+## Hjälp
+Jag har använt Claude (AI) som handledare under uppgiften. Den har gett mig ledtrådar 
+o frågor om var felen kan sitta o hur jag kan tänka, o hjälpt mig att sortera o formulera 
+README utifrån mina egna anteckningar. Ändringarna i koden har jag gjort o testat själv.
