@@ -4,9 +4,19 @@ public class Item // Gör klassen public så att den går att använda överallt
     public string Name { get; set; }
     public int Price { get; set; }
 
-    public Item(string name, int price)
+    public Item(string name, int price) //Konstruktor: körs när ett nytt Item skapas
     {
-        Name = name;
+        if (string.IsNullOrWhiteSpace(name)) //Kollar om namnet null, tomt eller bara blanksteg 
+        {
+            throw new ArgumentException("Varan måste vara ett namn."); /// Avbryter och kastar ett fel
+        }
+
+        if (price < 0) // Kontrolerar så det inte är negativt pris
+        {
+            throw new ArgumentException("Priset kan inte vara negativt.");
+        }
+
+        Name = name; // Körs bara om båda kontrollerna klarades
         Price = price;
     }
 
