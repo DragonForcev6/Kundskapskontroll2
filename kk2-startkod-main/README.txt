@@ -23,9 +23,10 @@ Claude sa att jag skulle lägga till <ItemGroup> i csproj för att filen items.t
 bli kopierad till byggmappen (bin\Debug\net10.0).
 
 ShoppingList.cs
-private readonly List<Item> items = new List<Item>(); 
-private readonly string path;
-Hindra framtida misstag så man inte råkar skriva över items eller path
+readonly List<Item> items = new List<Item>(); 
+readonly string path;
+Hindra framtida misstag så man inte råkar skriva över items eller path, 
+ändrar till public så Program kan nå båda
 
 File.WriteAllText(path, string.Join("\r\n", lines) + "\r\n"); i save använder \r\n medan 
 Load bara använder \n det medför att \r kommer hänga med vissa variablar ibland.
@@ -39,6 +40,20 @@ försöker ladda upp den, läsa allt som finns där eller inte finns där om det
 Och Claude mena på att det finns kod som löser alla tre problemen. Så med File.Exists löste även kraschen som uppstod 
 när filen saknades. IsNullOrWhiteSpace hoppar över tomma rader, jag såg att File.ReadAllText inte går att använda med arrey 
 så bytte till File.ReadAllLine den hanterar oxå \n o \r\n så \r inte hamnar i varans namn.
+
+Save sparar inte men just nu skriver ut att den sparas oavsett.
+Så ändrar Save till en public boolian.Frågat Claud som föreslog att lägga 
+allt i en try loop där koden som kan misslyckas, om något går fel hoppar programet till
+rätt catch. File.WriteAllLines(path, lines); skriver alla raderi filen, 
+sparar filen om den inte finns o skriver över den om den finns.
+meddelandet "Listan sparades" kommer bara ut om allt gick bra.
+Ordningen mellan IOException o DirectoryNotFoundException är viktig i koden om man skriver den som <-- jag skrev nu kommer 
+inte koden att läsas uppifrån o ner o ta det som passar bäst, står IOException först kommer den alltid att passa bäst o det 
+spesifika blocket under kommer aldrig i tur.
+
+RemovAt tar emot vilken siffra som helst o ger inget felmeddelande när användaren anger ett nummer som inte finns i listen.
+
+ 
 
 Item.cs
 Får ett kopileringsfel "Inconsistent accessibility" (CS0050/CS0051) enligt Claude är det för att Find retunerar en Item
