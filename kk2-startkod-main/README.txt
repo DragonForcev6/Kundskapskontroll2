@@ -76,6 +76,9 @@ returnera false så därför kastar den ett undantag. Program.cs kollar redan na
 skapas, men Load skapar varor direkt från filen utan att kolla. Därför la jag try/catch med 
 ArgumentException i Load, så om någon rad i filen är fel hoppas den över med ett meddelande i stället 
 för att programmet kraschar. Jag testade med raden -5;Test i filen.
+Program.cs har också en try/catch runt new Item(...) så att användaren får Items felmeddelande om något 
+ändå slinker igenom. I Load använder jag TryParse och kollar att raden har ett semikolon, så att trasiga 
+rader hoppas över i stället för att krascha. Load använder också Add, så taket gäller även när filen läses in.
 
 ## Andra ändringar
 - items o path är readonly. Det gör att man inte kan råka byta ut listan eller path mot något 

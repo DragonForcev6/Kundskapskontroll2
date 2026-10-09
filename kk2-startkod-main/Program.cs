@@ -19,8 +19,7 @@ while (true)
         Console.WriteLine("Skriv en siffra mellan 1-5."); //Skriver ut felmeddelande om användaren 
         continue; 
     }
- 
-    {
+
         if (choice == 1)
     {
         Console.Write("Namn: ");
@@ -39,15 +38,27 @@ while (true)
             Console.WriteLine("Varan sparades inte: du måste skriva ett giltigt pris.");
             continue;
         }
-
+    try
+    {
         if (list.Add(new Item(name, price)))
-        Console.WriteLine($"Lade till {name} för {price} kr i ShoppingListan."); //Skriver ut vad som lagts till i listan.
-        else
+            {
+              Console.WriteLine($"Lade till {name} för {price} kr i ShoppingListan."); //Skriver ut vad som lagts till i listan.
+         
+            }
+        else 
             {
                 Console.WriteLine($"Varan lades inte till: du har nått max taket på {ShoppingList.MaxTotal} kr."); 
                 // Felmeddelandet visas om max taket 5000 överskrids.
             }
+           
     }
+
+    catch (ArgumentException ex) // Om Item säger nej (tomt namn eller fel pris) får användaren veta varför.
+        {
+            Console.WriteLine($"Varan lades inte till: {ex.Message}");
+        }
+    }
+
     else if (choice == 2)
     {
         Console.Write("Nummer: ");
@@ -93,5 +104,6 @@ while (true)
         break;
     }
 
-    }
+    
+
 }
