@@ -11,7 +11,7 @@ public class Item // Gör klassen public så att den går att använda överallt
             throw new ArgumentException("Varan måste vara ett namn."); /// Avbryter och kastar ett fel
         }
 
-        if (price < 0) // Kontrolerar så det inte är negativt pris
+        if (price <= 0) // Kontrolerar så det inte är negativt pris
         {
             throw new ArgumentException("Priset kan inte vara negativt.");
         }
