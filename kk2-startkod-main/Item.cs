@@ -1,5 +1,5 @@
 // One item on the shopping list.
-public class Item // Gör klassen public så att den kan användas i ShoppingList.cs och Program.cs
+public class Item // Gör klassen public så att den går att använda överallt i projektet.
 {
     public string Name { get; set; }
     public int Price { get; set; }

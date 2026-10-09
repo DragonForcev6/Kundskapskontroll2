@@ -1,4 +1,4 @@
-ShoppingList list = new ShoppingList("manstrale.txt");
+ShoppingList list = new ShoppingList("items.txt");
 list.Load();
 
 while (true)
@@ -33,8 +33,8 @@ while (true)
         }
 
         Console.Write("Pris: ");
-        if (!int.TryParse(Console.ReadLine(), out int price) || price < 0) //if satts med TryParse så att inte programmet kraschar, 
-            //om användaren skriver in något annat än siffror. || price < 0 kollar att priset inte är negativt.
+        if (!int.TryParse(Console.ReadLine(), out int price) || price <= 0) //if satts med TryParse så att inte programmet kraschar, 
+            //om användaren skriver in något annat än siffror. || price <= 0 kollar att priset inte är negativt.
         {
             Console.WriteLine("Varan sparades inte: du måste skriva ett giltigt pris.");
             continue;
@@ -59,8 +59,10 @@ while (true)
     }
     else if (choice == 3)
     {
-        list.Save();
-        Console.WriteLine("ShoppingListan är sparad."); //Skriver ut att listan är sparad. ny
+        if (list.Save())
+        {
+            Console.WriteLine("ShoppingListan är sparad."); //Skriver ut att listan är sparad.
+        }
     }
     else if (choice == 4)
     {
