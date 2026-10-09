@@ -37,9 +37,10 @@ Mjölk\r kan inte varan Mjölk hittas.
 Jag fick lite tips ifrån Claud att ändra i Load.
 jag tänkte att programet borde kolla att filen finns redan innan den 
 försöker ladda upp den, läsa allt som finns där eller inte finns där om det finns null eller blanksteg.
-Och Claude mena på att det finns kod som löser alla tre problemen. Så med File.Exists löste även kraschen som uppstod 
-när filen saknades. IsNullOrWhiteSpace hoppar över tomma rader, jag såg att File.ReadAllText inte går att använda med arrey 
-så bytte till File.ReadAllLine den hanterar oxå \n o \r\n så \r inte hamnar i varans namn.
+Och Claude mena på att det finns kod som löser alla tre problemen. Så med File.Exists löste även 
+kraschen som uppstod när filen saknades. IsNullOrWhiteSpace hoppar över tomma rader, jag såg att File.
+ReadAllText inte går att använda med arrey så bytte till File.ReadAllLine den hanterar oxå \n o \r\n så \r 
+inte hamnar i varans namn.
 
 Save sparar inte men just nu skriver ut att den sparas oavsett.
 Så ändrar Save till en public boolian.Frågat Claud som föreslog att lägga 
@@ -47,17 +48,19 @@ allt i en try loop där koden som kan misslyckas, om något går fel hoppar prog
 rätt catch. File.WriteAllLines(path, lines); skriver alla raderi filen, 
 sparar filen om den inte finns o skriver över den om den finns.
 meddelandet "Listan sparades" kommer bara ut om allt gick bra.
-Ordningen mellan IOException o DirectoryNotFoundException är viktig i koden om man skriver den som <-- jag skrev nu kommer 
-inte koden att läsas uppifrån o ner o ta det som passar bäst, står IOException först kommer den alltid att passa bäst o det 
-spesifika blocket under kommer aldrig i tur.
+Ordningen mellan IOException o DirectoryNotFoundException är viktig i koden om man skriver den som <-- 
+jag skrev nu kommer inte koden att läsas uppifrån o ner o ta det som passar bäst, står IOException först 
+kommer den alltid att passa bäst o det spesifika blocket under kommer aldrig i tur.
 
-RemovAt tar emot vilken siffra som helst o ger inget felmeddelande när användaren anger ett nummer som inte finns i listen.
-
+RemovAt tar emot vilken siffra som helst o ger inget felmeddelande när användaren anger ett nummer som 
+inte finns i listen.
+Har ändrat så RemoveAt har koll på om listan är tom eller användaren knappar in nummer som är stämmer 
+överens med antal varor i listan.
  
 
 Item.cs
-Får ett kopileringsfel "Inconsistent accessibility" (CS0050/CS0051) enligt Claude är det för att Find retunerar en Item
-Claudes förslag är att jag skriver public class Item.
+Får ett kopileringsfel "Inconsistent accessibility" (CS0050/CS0051) enligt Claude är det för att 
+Find retunerar en Item Claudes förslag är att jag skriver public class Item.
 
  
 

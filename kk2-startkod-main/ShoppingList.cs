@@ -16,9 +16,24 @@ public class ShoppingList
     }
 
     // Removes the item the user sees as number 1, 2, 3 ...
-    public void RemoveAt(int number) 
+    public bool RemoveAt(int number) 
     {
+        if (0 == items.Count) // Om listan är tom kommer ett felmeddelande.
+        {
+            Console.WriteLine("Listan är redan tom.");
+            return false;
+        }
+
+        if (number < 1 || number > items.Count) //Kollar om användaren skriver in ett nummer som är mindre än 1 eller
+        // större än antal varor i listan.
+       
+        {
+            Console.WriteLine($"Ogiltigt nummer skriv in ett nummer mellan 1 och {items.Count}.");
+            return false;
+        }
+
         items.RemoveAt(number - 1);
+        return true;
     }
 
     // Adds up the price of every item on the list.
