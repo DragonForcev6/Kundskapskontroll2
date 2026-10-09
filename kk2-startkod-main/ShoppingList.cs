@@ -1,6 +1,8 @@
 // Holds the items and takes care of loading and saving them.
 public class ShoppingList
 {
+    public const int MaxTotal = 5000; // Max tak för ShoppingListan
+
     readonly List<Item> items = new List<Item>(); // readonly för både List<Item> och string path ska finnas kvar
     //  i minnet under hela programmets gång. readonly gör att kompliatorn varnar om du av misstag råkar ändra den.
     readonly string path;
@@ -10,9 +12,15 @@ public class ShoppingList
         this.path = path;
     }
 
-    public void Add(Item item)
+    public bool Add(Item item)
     {
+       if (Total() + item.Price > MaxTotal) // Kollar att användaren inte överskride max taket.
+        {
+            return false;
+        }
+
         items.Add(item);
+        return true;
     }
 
     // Removes the item the user sees as number 1, 2, 3 ...
@@ -125,8 +133,14 @@ public class ShoppingList
                 continue; 
             }
             string[] parts = line.Split(';'); //Splitar linjerna med ett semikolon ;
-
+            try
+            {
              items.Add(new Item(parts[1], int.Parse(parts[0])));
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine($"En rad i filen hoppades över: {ex.Message}");
+            }
         }
   
     }

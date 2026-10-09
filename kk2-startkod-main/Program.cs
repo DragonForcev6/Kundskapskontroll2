@@ -40,8 +40,13 @@ while (true)
             continue;
         }
 
-        list.Add(new Item(name, price));
+        if (list.Add(new Item(name, price)))
         Console.WriteLine($"Lade till {name} för {price} kr i ShoppingListan."); //Skriver ut vad som lagts till i listan.
+        else
+            {
+                Console.WriteLine($"Varan lades inte till: du har nått max taket på {ShoppingList.MaxTotal} kr."); 
+                // Felmeddelandet visas om max taket 5000 överskrids.
+            }
     }
     else if (choice == 2)
     {

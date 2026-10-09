@@ -1,7 +1,0 @@
-15;Mjölk
-32;Bröd
-89;Ost
-6;Bubbelgum
-16;Monster
-42;Torkad Mango
-24;Fun Light
