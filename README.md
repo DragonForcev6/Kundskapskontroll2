@@ -71,7 +71,9 @@ behöver bara en if-sats: blir det true skrivs det ut att varan lades till, blir
 ett felmeddelande att max taket är nått.
 
 ### Varför Item kastar undantag
-Item kastar ArgumentException om namnet är tomt eller priset är negativt. En konstruktor kan inte 
+Item kastar ArgumentException om namnet är tomt o ArgumentOutOfRangeException om priset är 0 eller 
+negativt. ArgumentOutOfRangeException ärver från ArgumentException, så samma catch fångar båda, men 
+anroparen kan skilja fallen åt om det behövs. En konstruktor kan inte 
 returnera false så därför kastar den ett undantag. Program.cs kollar redan namn o pris innan varan 
 skapas, men Load skapar varor direkt från filen utan att kolla. Därför la jag try/catch med 
 ArgumentException i Load, så om någon rad i filen är fel hoppas den över med ett meddelande i stället 
@@ -125,6 +127,8 @@ o sparar i.
 +------------------------------+
 | + Item(string, int)          |
 |   kastar ArgumentException   |
+|   o ArgumentOutOfRange-      |
+|   Exception                  |
 | + ToString() : string        |
 +------------------------------+
 ```

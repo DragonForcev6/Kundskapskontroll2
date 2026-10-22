@@ -13,7 +13,7 @@ public class Item // Gör klassen public så att den går att använda överallt
 
         if (price <= 0) // Kontrolerar så det inte är negativt pris
         {
-            throw new ArgumentException("Priset kan inte vara negativt.");
+            throw new ArgumentOutOfRangeException(nameof(price), "Priset måste vara större än 0.");
         }
 
         Name = name; // Körs bara om båda kontrollerna klarades
