@@ -1,17 +1,17 @@
 // One item on the shopping list.
 public class Item // Gör klassen public så att den går att använda överallt i projektet.
 {
-    public string Name { get; set; }
-    public int Price { get; set; }
+    public string Name { get; } // Egenskapen tilldelas i konstruktorn, men ingen annanstans.
+    public int Price { get; }
 
     public Item(string name, int price) //Konstruktor: körs när ett nytt Item skapas
     {
-        if (string.IsNullOrWhiteSpace(name)) //Kollar om namnet null, tomt eller bara blanksteg 
+        if (string.IsNullOrWhiteSpace(name)) //Kollar om namnet är null, tomt eller bara blanksteg 
         {
-            throw new ArgumentException("Varan måste vara ett namn."); /// Avbryter och kastar ett fel
+            throw new ArgumentException("Varan måste ha ett namn."); /// Avbryter och kastar ett fel
         }
 
-        if (price <= 0) // Kontrolerar så det inte är negativt pris
+        if (price <= 0) // Kontrollerar att priset är större än 0, stoppar även 0,
         {
             throw new ArgumentOutOfRangeException(nameof(price), "Priset måste vara större än 0.");
         }
