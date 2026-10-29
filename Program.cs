@@ -13,10 +13,12 @@ while (true)
     Console.WriteLine("5. Avsluta");
     Console.Write("Välj:");
 
-    if (!int.TryParse(Console.ReadLine(), out int choice)) //Sätter in hela choice i en if-sats och TryParse så att
-    // inte programmet kraschar om någon skriver in en bokstav eller tecken.
+    //Sätter in hela choice i en if-sats och TryParse så att inte 
+    // programmet kraschar om någon skriver in en bokstav eller tecken.
+    if (!int.TryParse(Console.ReadLine(), out int choice))
     {
-        Console.WriteLine("Skriv gärna en siffra mellan 1 och 5."); //Skriver ut felmeddelande om användaren 
+        //Skriver ut felmeddelande om användaren använder tecken eller bokstäver
+        Console.WriteLine("Skriv gärna en siffra mellan 1 och 5.");
         continue;
     }
 
@@ -25,15 +27,17 @@ while (true)
         Console.Write("Namn: ");
         string name = Console.ReadLine();
 
-        if (string.IsNullOrWhiteSpace(name)) // Kollar att användaren skriver in ett namn annars visas ett felmeddelande.
+        // Kollar att användaren skriver in ett namn annars visas ett felmeddelande.
+        if (string.IsNullOrWhiteSpace(name))
         {
             Console.WriteLine("Varan sparades inte: du måste skriva ett namn.");
             continue;
         }
 
         Console.Write("Pris: ");
-        if (!int.TryParse(Console.ReadLine(), out int price) || price <= 0) //if-sats med TryParse så att inte programmet kraschar, 
-        //om användaren skriver in något annat än siffror. || price <= 0 kollar att priset är större än 0.
+        //if-sats med TryParse så att inte programmet kraschar, om användaren skriver in 
+        // något annat än siffror. || price <= 0 kollar att priset är större än 0.
+        if (!int.TryParse(Console.ReadLine(), out int price) || price <= 0)
         {
             Console.WriteLine("Varan sparades inte: du måste skriva ett giltigt pris.");
             continue;
@@ -42,18 +46,19 @@ while (true)
         {
             if (list.Add(new Item(name, price)))
             {
-                Console.WriteLine($"Lade till {name} för {price} kr i ShoppingListan."); //Skriver ut vad som lagts till i listan.
-
+                //Skriver ut vad som lagts till i listan.
+                Console.WriteLine($"Lade till {name} för {price} kr i ShoppingListan.");
             }
             else
             {
-                Console.WriteLine($"Varan lades inte till: du har nått maxtaket på {ShoppingList.MaxTotal} kr.");
                 // Felmeddelandet visas om maxtaket 5000 överskrids.
+                Console.WriteLine($"Varan lades inte till: du har nått maxtaket på {ShoppingList.MaxTotal} kr.");
             }
 
         }
 
-        catch (ArgumentException ex) // Om Item säger nej (tomt namn eller fel pris) får användaren veta varför.
+        // Om Item säger nej (tomt namn eller fel pris) får användaren veta varför.
+        catch (ArgumentException ex)
         {
             Console.WriteLine($"Varan lades inte till: {ex.Message}");
         }
@@ -62,7 +67,9 @@ while (true)
     else if (choice == 2)
     {
         Console.Write("Nummer: ");
-        if (int.TryParse(Console.ReadLine(), out int number)) //Kollar att användaren skrivit siffror.
+
+        //Kollar att användaren skrivit siffror.
+        if (int.TryParse(Console.ReadLine(), out int number))
         {
 
             if (list.RemoveAt(number)) //När varan tas bort får användaren veta det.
@@ -71,35 +78,40 @@ while (true)
             }
             else
             {
-                if (list.Count == 0)
+                if (list.Count == 0) // Om listan är tom o användaren försöker ta bort en vara får de ett meddelande
                 {
                     Console.WriteLine("Listan är redan tom.");
                 }
                 else
                 {
+                    // skriver ut ett felmeddelande om användaren skriver negativa tal, noll o för höga tal.
                     Console.WriteLine($"Ogiltigt nummer, skriv in ett nummer mellan 1 och {list.Count}.");
                 }
             }
         }
         else
         {
-            Console.WriteLine("Nu blev det fel, försök att skriva med siffror."); //skriver ut 
-                                                                                  //felmeddelande om användaren skriver något annat än siffror.
+            //skriver ut felmeddelande om användaren skriver något annat än siffror.
+            Console.WriteLine("Nu blev det fel, försök att skriva med siffror.");
         }
 
     }
+
     else if (choice == 3)
     {
         if (list.Save())
         {
-            Console.WriteLine("ShoppingListan är sparad."); //Skriver ut att listan är sparad.
+            Console.WriteLine("ShoppingListan är sparad.");
         }
     }
+
     else if (choice == 4)
     {
-        Console.Write("Namn att söka efter: ");
+        Console.Write("Sök efter vara: ");
         string wanted = Console.ReadLine();
 
+        // Om användaren inte skulle skriva något eller blanksteg 
+        // fångas det upp med ett felmeddelande.
         if (string.IsNullOrWhiteSpace(wanted))
         {
             Console.WriteLine("Skriv vad du söker efter.");
@@ -117,9 +129,10 @@ while (true)
             Console.WriteLine($"Hittade: {found}");
         }
     }
+
     else if (choice == 5)
     {
-        break;
+        break; // Avsluta
     }
     else
     {

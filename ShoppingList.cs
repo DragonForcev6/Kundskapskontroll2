@@ -1,13 +1,16 @@
 // Holds the items and takes care of loading and saving them.
 public class ShoppingList
 {
-    public const int MaxTotal = 5000; // Max tak för ShoppingListan
+    // Max tak för ShoppingListan
+    public const int MaxTotal = 5000;
 
-    readonly List<Item> items = new List<Item>(); // readonly för både List<Item> och string path ska finnas kvar
-    //  i minnet under hela programmets gång. readonly gör att kompilatorn varnar om du av misstag råkar ändra den.
+    // readonly för både List<Item> och string path ska finnas kvar i minnet under hela 
+    // programmets gång. readonly gör att kompilatorn varnar om du av misstag råkar ändra den.
+    readonly List<Item> items = new List<Item>();
     readonly string path;
 
-    public int Count => items.Count; // Låter Program.cs se antalet varor utan att kunna ändra i listan.
+    // Låter Program.cs se antalet varor utan att kunna ändra i listan.
+    public int Count => items.Count;
 
     public ShoppingList(string path)
     {
@@ -16,7 +19,8 @@ public class ShoppingList
 
     public bool Add(Item item)
     {
-        if (Total() + item.Price > MaxTotal) // Kollar att användaren inte överskrider maxtaket.
+        // Kollar att användaren inte överskrider maxtaket.
+        if (Total() + item.Price > MaxTotal)
         {
             return false;
         }
@@ -32,10 +36,9 @@ public class ShoppingList
         {
             return false;
         }
-
-        if (number < 1 || number > items.Count) //Kollar om användaren skriver in ett nummer som är mindre än 1 eller
-                                                // större än antal varor i listan.
-
+        //Kollar om användaren skriver in ett nummer som är mindre 
+        // än 1 eller större än antal varor i listan.
+        if (number < 1 || number > items.Count)
         {
             return false;
         }
@@ -49,7 +52,8 @@ public class ShoppingList
     {
         int sum = 0;
 
-        for (int i = 0; i < items.Count; i++) //Det här borde vara 0 annars blir inte första varan i index plockad
+        //Det här borde vara 0 annars blir inte första varan i index plockad
+        for (int i = 0; i < items.Count; i++)
         {
             sum += items[i].Price;
         }
@@ -97,20 +101,21 @@ public class ShoppingList
             return true;
 
         }
-        catch (UnauthorizedAccessException) //Kollar om filen är skrivskyddad 
-        //eller användaren är obehörig att skriva till filen. Om det är så visas ett felmeddelande.
+        //Kollar om filen är skrivskyddad eller användaren är obehörig att skriva till 
+        // filen. Om det är så visas ett felmeddelande.
+        catch (UnauthorizedAccessException)
         {
             Console.WriteLine("Listan sparades inte: du saknar behörighet.");
             return false;
         }
-
-        catch (DirectoryNotFoundException) //Kollar om mappen i path inte finns.
+        //Kollar om mappen i path inte finns.
+        catch (DirectoryNotFoundException)
         {
             Console.WriteLine("Listan sparades inte: mappen finns inte.");
             return false;
         }
-
-        catch (IOException ex) //Kollar om filen används i ett annat program, eller disken är full.
+        //Kollar om filen används i ett annat program, eller disken är full.
+        catch (IOException ex)
         {
             Console.WriteLine($"Listan sparades inte: {ex.Message}");
             return false;
@@ -120,23 +125,28 @@ public class ShoppingList
     // Reads the file back into the list.
     public void Load()
     {
-        if (!File.Exists(path)) //Kollar om filen finns, om den inte finns händer 
-        //inget men om den finns hoppar den vidare i koden.
+        //Kollar om filen finns, om den inte finns händer inget men 
+        // om den finns hoppar den vidare i koden.
+        if (!File.Exists(path))
         {
             return;
         }
-        foreach (string line in File.ReadAllLines(path)) //Läser hela filen vid path o returnerar en string-array
-        //där varje element är en rad från filen. foreach loopar arrayen en rad i taget o sparar den i line.
+        //Läser hela filen vid path o returnerar en string-array där varje element är 
+        // en rad från filen. foreach loopar arrayen en rad i taget o sparar den i line.
+        foreach (string line in File.ReadAllLines(path))
         {
-            if (string.IsNullOrWhiteSpace(line)) // Hoppar över raden om den är tom eller bara har blanksteg. 
+            // Hoppar över raden om den är tom eller bara har blanksteg. 
+            if (string.IsNullOrWhiteSpace(line))
             {
                 continue;
             }
-            string[] parts = line.Split(';', 2); //Splitar linjerna med ett semikolon ;
 
-            if (parts.Length < 2 || !int.TryParse(parts[0], out int price)) // Hoppar över raden om semikolon
-                                                                            // saknas eller om priset inte är en siffra, annars kraschar programmet.
+            // Delar raden vid första semikolon ;.
+            string[] parts = line.Split(';', 2);
 
+            // Hoppar över raden om semikolon saknas eller om priset inte är en siffra, 
+            // annars kraschar programmet.
+            if (parts.Length < 2 || !int.TryParse(parts[0], out int price))
             {
                 Console.WriteLine($"En rad i filen hoppades över: \"{line}\" har fel format.");
                 continue;
@@ -144,7 +154,8 @@ public class ShoppingList
 
             try
             {
-                if (!Add(new Item(parts[1], price))) // Använder Add så att taket gäller även när filen läses in.
+                // Använder Add så att taket gäller även när filen läses in.
+                if (!Add(new Item(parts[1], price)))
                 {
                     Console.WriteLine($"{parts[1]} lades inte till: maxtaket på {MaxTotal} kr är nått.");
                 }
