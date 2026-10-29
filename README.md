@@ -105,6 +105,7 @@ o sparar i.
 | ShoppingList                 |
 +------------------------------+
 | + MaxTotal : int = 5000      |
+| + Count : int  (read-only)   |
 | - items : List<Item>         |
 | - path : string              |
 +------------------------------+
@@ -122,8 +123,8 @@ o sparar i.
 +------------------------------+
 | Item                         |
 +------------------------------+
-| + Name : string              |
-| + Price : int                |
+| + Name : string  (read-only) |
+| + Price : int    (read-only) |
 +------------------------------+
 | + Item(string, int)          |
 |   kastar ArgumentException   |
@@ -137,3 +138,10 @@ o sparar i.
 Jag har använt Claude (AI) som handledare under uppgiften. Den har gett mig ledtrådar 
 o frågor om var felen kan sitta o hur jag kan tänka, o hjälpt mig att sortera o formulera 
 README utifrån mina egna anteckningar. Ändringarna i koden har jag gjort o testat själv.
+
+## Omtenta 1
+- Item har bara `{ get; }` på Name o Price. Innan hade de `{ get; set; }`, då kunde man skriva `ost.Price = -5` efter konstruktorn o gå förbi kontrollen. Nu kan de bara sättas i konstruktorn, så en Item kan aldrig få ogiltiga värden. Jag testade med `ost.Price = -5` o då blev raden röd.
+- Skriver man ett tal som inte finns i menyn, t.ex. 7, får man nu ett felmeddelande. Innan händeinget. Jag la till ett `else` sist i if-kedjan som fångar alla tal som inte är 1–5.
+- Load använder `Split(';', 2)` så den bara delar vid första semikolonet. Innan blev en vara som hette `Ost;Brie` bara `Ost` när filen lästes in, eftersom resten hamnade i parts[2].
+- Find använder `Contains` med `StringComparison.OrdinalIgnoreCase`. Då spelar stora o små bokstäver ingen roll o man kan söka på en del av namnet, t.ex. `brie` hittar `Ost;Brie`. Find returnerar den första varan som matchar. Program.cs kollar att sökningen inte är tom, annars skulle `""` matcha första varan i listan.
+- RemoveAt skriver inte ut något längre, den returnerar bara true eller false precis som Add. Meddelandena ligger i Program.cs. ShoppingList har fått `Count` så Program.cs kan se om listan är tom eller om numret var fel, utan att kunna ändra i listan. Save o Load skriver fortfarande ut själva eftersom de har flera olika felmeddelanden, det valde jag att låta vara.
