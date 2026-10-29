@@ -4,8 +4,10 @@ public class ShoppingList
     public const int MaxTotal = 5000; // Max tak för ShoppingListan
 
     readonly List<Item> items = new List<Item>(); // readonly för både List<Item> och string path ska finnas kvar
-    //  i minnet under hela programmets gång. readonly gör att kompliatorn varnar om du av misstag råkar ändra den.
+    //  i minnet under hela programmets gång. readonly gör att kompilatorn varnar om du av misstag råkar ändra den.
     readonly string path;
+
+    public int Count => items.Count; // Låter Program.cs se antalet varor utan att kunna ändra i listan.
 
     public ShoppingList(string path)
     {
@@ -14,7 +16,7 @@ public class ShoppingList
 
     public bool Add(Item item)
     {
-       if (Total() + item.Price > MaxTotal) // Kollar att användaren inte överskride max taket.
+        if (Total() + item.Price > MaxTotal) // Kollar att användaren inte överskrider maxtaket.
         {
             return false;
         }
@@ -24,19 +26,17 @@ public class ShoppingList
     }
 
     // Removes the item the user sees as number 1, 2, 3 ...
-    public bool RemoveAt(int number) 
+    public bool RemoveAt(int number)
     {
-        if (0 == items.Count) // Om listan är tom kommer ett felmeddelande.
+        if (0 == items.Count) // Om listan är tom returneras false.
         {
-            Console.WriteLine("Listan är redan tom.");
             return false;
         }
 
         if (number < 1 || number > items.Count) //Kollar om användaren skriver in ett nummer som är mindre än 1 eller
-        // större än antal varor i listan.
-       
+                                                // större än antal varor i listan.
+
         {
-            Console.WriteLine($"Ogiltigt nummer skriv in ett nummer mellan 1 och {items.Count}.");
             return false;
         }
 
@@ -62,7 +62,7 @@ public class ShoppingList
     {
         foreach (Item item in items)
         {
-            if (item.Name == name)
+            if (item.Name.Contains(name, StringComparison.OrdinalIgnoreCase))
             {
                 return item;
             }
@@ -84,60 +84,60 @@ public class ShoppingList
     // Writes one item per line, as "price;name".
     public bool Save()
     {
-    try
-    {
-        List<string> lines = new List<string>();
-
-        foreach (Item item in items)
+        try
         {
-            lines.Add($"{item.Price};{item.Name}");
-        }
-        
-        File.WriteAllLines(path, lines);
-        return true;
+            List<string> lines = new List<string>();
 
-    }
+            foreach (Item item in items)
+            {
+                lines.Add($"{item.Price};{item.Name}");
+            }
+
+            File.WriteAllLines(path, lines);
+            return true;
+
+        }
         catch (UnauthorizedAccessException) //Kollar om filen är skrivskyddad 
         //eller användaren är obehörig att skriva till filen. Om det är så visas ett felmeddelande.
         {
-           Console.WriteLine("Listan sparades inte: du saknar behörighet.");
-             return false;
+            Console.WriteLine("Listan sparades inte: du saknar behörighet.");
+            return false;
         }
-           
-        catch (DirectoryNotFoundException) //Kollar om mappen i path finns inte.
+
+        catch (DirectoryNotFoundException) //Kollar om mappen i path inte finns.
         {
-           Console.WriteLine("Kunde inte sparas: då mappen inte finns.");
-           return false;
+            Console.WriteLine("Listan sparades inte: mappen finns inte.");
+            return false;
         }
-    
-           catch (IOException ex) //Kollar om filen används i ett annat program, eller disken är full.
+
+        catch (IOException ex) //Kollar om filen används i ett annat program, eller disken är full.
         {
-           Console.WriteLine($"Listan sparades inte: {ex.Message}");
-           return false;
-        } 
+            Console.WriteLine($"Listan sparades inte: {ex.Message}");
+            return false;
+        }
     }
 
     // Reads the file back into the list.
-    public void Load() 
+    public void Load()
     {
         if (!File.Exists(path)) //Kollar om filen finns, om den inte finns händer 
         //inget men om den finns hoppar den vidare i koden.
         {
             return;
         }
-        foreach (string line in File.ReadAllLines(path)) //Läser hela filen vid path o retunerar en string arreyer
-        //där varje element är en rad från filen. Foreachloopar arreyen en rad i taget o sparar den i line.
+        foreach (string line in File.ReadAllLines(path)) //Läser hela filen vid path o returnerar en string-array
+        //där varje element är en rad från filen. foreach loopar arrayen en rad i taget o sparar den i line.
         {
             if (string.IsNullOrWhiteSpace(line)) // Hoppar över raden om den är tom eller bara har blanksteg. 
-            {  
-                continue; 
+            {
+                continue;
             }
-            string[] parts = line.Split(';'); //Splitar linjerna med ett semikolon ;
-            
+            string[] parts = line.Split(';', 2); //Splitar linjerna med ett semikolon ;
+
             if (parts.Length < 2 || !int.TryParse(parts[0], out int price)) // Hoppar över raden om semikolon
-            // saknas eller om priset inte är en siffra, annars kraschar programmet.
-            
-           {
+                                                                            // saknas eller om priset inte är en siffra, annars kraschar programmet.
+
+            {
                 Console.WriteLine($"En rad i filen hoppades över: \"{line}\" har fel format.");
                 continue;
             }
@@ -146,14 +146,14 @@ public class ShoppingList
             {
                 if (!Add(new Item(parts[1], price))) // Använder Add så att taket gäller även när filen läses in.
                 {
-                    Console.WriteLine($"{parts[1]} lades inte till: max taket på {MaxTotal} kr är nått.");
+                    Console.WriteLine($"{parts[1]} lades inte till: maxtaket på {MaxTotal} kr är nått.");
                 }
-            }    
+            }
             catch (ArgumentException ex)
             {
                 Console.WriteLine($"En rad i filen hoppades över: {ex.Message}");
             }
         }
-  
+
     }
 }
